@@ -23,7 +23,7 @@ b. Steering mechanism getting caught in long grass
 
 Point "a" can be addressed by having a drivetrain where gear ratio can easily be adjusted, therefore enabling for RPM to be compensated for torque, or vice versa. Point "b" can be addressed by having a dual wheel drive (one motor attached to a wheel on each side), therefore cicumventing the need for a steering system.
 
-![Design](./LunaRover Mk2.png)
+![Design](./LunaRoverMk2.png)
 
 #### Step 2 - Desinging electronics
 
