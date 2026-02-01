@@ -12,7 +12,7 @@ If I wanted to leave my dog in the garden to entertain herself, what products co
 It surprises me that I couldn't find evidence of someone having created an autonomous vehicle to play with their dog... that's something that I've sought to resolve.
 
 ## Proposed solution
-Brushed motor radio controlled (rc) car modified to drive autonomously with the help of a raspberry pi.
+Create a radio controlled (rc) car which can drive autonomously at the flick of toggle.
 
 ## Method
 ### Design new RC car, with a customisable drivetrain
