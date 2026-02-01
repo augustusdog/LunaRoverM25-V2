@@ -33,5 +33,154 @@ The circuit design allows for PWM signals to be sent from the raspberry pi to th
 
 #### Step 3 - Design the firmware
 
+Written in Python, this code runs the RF sniffer executable - which listens for rf signals at 433MHz. Data received by the RF sniffer is then translated into a set of actions, and subsequewntly to pulse width modulated (PWM) signals - which are sent to each of the two motors drivers. RF sniffer code (uncompiled c++) is shared beneath the main program code below.
+
+```
+from gpiozero import PWMLED
+import threading
+import time
+import subprocess
+import os
+
+# Initialise motors
+motor1 = PWMLED(17)
+motor2 = PWMLED(27)
+motor1.on()
+motor1.value = 1
+motor2.on()
+motor2.value = 0
+motor1.frequency = 1000
+motor2.frequency = 1000
+
+def shifty_motor1(speed):
+	motor1.value = 1 - (int(speed)/100)
+def shifty_motor2(speed):
+	motor2.value = int(speed)/100
+
+# UPDATE THIS to the full path of your RFSniffer executable
+rf_sniffer_path = '/home/[pi_username]/433Utils/RPi_utils/RFSniffer'  # Change if your username/folder differs
+
+#print("Listening for RF codes... (Press Ctrl+C to exit)")
+
+# Run RFSniffer directly (no 'sudo' inside) – we'll run the whole script with sudo
+process = subprocess.Popen(
+    [rf_sniffer_path],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,  # Merge any errors into stdout
+    text=True,
+    bufsize=1,                 # Line-buffered
+    universal_newlines=True
+)
+
+os.environ['PYTHONUNBUFFERED'] = '1'  # Helps in some cases
+
+try:
+      for line in process.stdout:
+            line = line.strip()
+            line = int(line.split("Received ")[1])
+            #print(line)  # Optional: raw output for debugging
+            if line < 15728640 or line > 16777215:
+                continue
+            if (line >> 20) & 0xF == 0b1111:
+                x = (line >> 10) & 0x3FF
+                y = line & 0x3FF
+
+                #print(f"Valid packet x: {x:4d} y: {y:4d}")
+                status = "NO MOVEMENT"
+
+                if x < 200 and y < 700:
+                    status = "RIGHT"
+                    shifty_motor1(100)
+                    shifty_motor2(0)
+                elif x > 700 and y < 700:
+                    status = "LEFT"
+                    shifty_motor1(0)
+                    shifty_motor2(100)
+                elif x < 700 and y > 700:
+                    status = "FORWARD"
+                    shifty_motor1(50)
+                    shifty_motor2(50)
+                else:
+                    shifty_motor1(0)
+                    shifty_motor2(0)               
+           
+                #print(f">>> Received code: {line} → Classified as: {status}")
+
+except KeyboardInterrupt:
+    print("\nExiting gracefully...")
+finally:
+    process.terminate()
+    process.wait()  # Clean shutdown
+
+
+```
+
+With the RF sniffer code pin 3 refers to the wiring pi pin (as explained [here](https://projects.drogon.net/raspberry-pi/wiringpi/pins/) that corresponds to GPIO22 on the RPi 5 ):
+```
+/*
+  RFSniffer
+
+  Usage: ./RFSniffer [<pulseLength>]
+  [] = optional
+
+  Hacked from http://code.google.com/p/rc-switch/
+  by @justy to provide a handy RF code sniffer
+*/
+
+#include "../rc-switch/RCSwitch.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+     
+     
+RCSwitch mySwitch;
+ 
+
+
+int main(int argc, char *argv[]) {
+  
+     // This pin is not the first pin on the RPi GPIO header!
+     // Consult https://projects.drogon.net/raspberry-pi/wiringpi/pins/
+     // for more information.
+     int PIN = 3;
+     
+     if(wiringPiSetup() == -1) {
+       printf("wiringPiSetup failed, exiting...");
+       return 0;
+     }
+
+     int pulseLength = 0;
+     if (argv[1] != NULL) pulseLength = atoi(argv[1]);
+
+     mySwitch = RCSwitch();
+     if (pulseLength != 0) mySwitch.setPulseLength(pulseLength);
+     mySwitch.enableReceive(PIN);  // Receiver on interrupt 0 => that is pin #2
+     
+    
+     while(1) {
+  
+      if (mySwitch.available()) {
+    
+        unsigned long value = mySwitch.getReceivedValue();
+    
+        if (value == 0) {
+          printf("Unknown encoding\n");
+        } else {    
+   
+          printf("Received %lu\n", mySwitch.getReceivedValue() );
+        }
+    
+        fflush(stdout);
+        mySwitch.resetAvailable();
+      }
+      usleep(100); 
+  
+  }
+
+  exit(0);
+
+
+}
+
 
 ```
