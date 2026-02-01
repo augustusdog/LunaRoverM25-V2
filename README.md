@@ -1,5 +1,5 @@
 # LunaRoverM25-V2
-LunaRoverA25 had some issues with a. torque, b. steering. LunaRoverA25-V2 aims to overcome these problems
+LunaRoverA25 had some issues with a. torque, b. steering. LunaRoverM25-V2 aims to overcome these problems
 
 ## Introduction
 I have a dog named Luna. I sometimes feel bad when I leave Luna to entertain herself. I wanted a cool new project to work on. Considering all that, I present to you.... the LunaRover.
@@ -27,9 +27,10 @@ Point "a" can be addressed by having a drivetrain where gear ratio can easily be
 
 #### Step 2 - Design the electronics
 
-The circuit design allows for PWM signals to be sent from the raspberry pi to the brushed dc motors, via the motor drivers. To do that it is necessary that 3.3V logic signals from the raspberry pi are converted to 5V logic signals which can be interpreted by the BTS7960 motor driver.
+The circuit design allows for PWM signals to be sent from the raspberry pi to the brushed dc motors, via the motor drivers. To do that it is necessary that 3.3V logic signals from the raspberry pi are converted to 5V logic signals which can be interpreted by the BTS7960 motor driver. Different PWM signals are sent depending on the Radio Frequency (RF) data received. Circuit diagrams are drawn below:
 
-![Part of Circuit Design](./CircuitDesign.png)
+![Microprocessor circuit design (RPi 5)](./"microprocessor circuit".png)
+
 
 Note that the above intentionally excludes half the circuit (for the other dc motor and level shifter) and the power supply.
 
