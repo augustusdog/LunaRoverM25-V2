@@ -1,4 +1,4 @@
-# LunaRoverA25-V2
+# LunaRoverM25-V2
 LunaRoverA25 had some issues with a. torque, b. steering. LunaRoverA25-V2 aims to overcome these problems
 
 ## Introduction
@@ -9,10 +9,10 @@ If I wanted to leave my dog in the garden to entertain herself, what products co
 
 ![Lit Review Venn](./venn.png)
 
-It surprises me that I couldn't find evidence of someone having created an autonomous vehicle to play with their dog... that's something that I've sought to resolve.
+It surprises me that I couldn't find evidence of someone having created an autonomous vehicle to play with their dog... that's something that I've sought to resolve. Note that, this version is manual but by implementing logic from the LunaRoverA25-V1 it can be converted to be automatic (I just haven't got around to that yet as the grass is to wet to test it on in the winter)
 
 ## Proposed solution
-Create a radio controlled (rc) car which can drive autonomously at the flick of toggle.
+Create a radio controlled (rc) car which can drive autonomously at the flick of toggle. (this is just for the manual part though).
 
 ## Method
 ### Design new RC car, with a customisable drivetrain
