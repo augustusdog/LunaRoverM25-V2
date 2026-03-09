@@ -1,6 +1,11 @@
 # LunaRoverM25-V2
 LunaRoverA25 had some issues with a. torque, b. steering. LunaRoverM25-V2 aims to overcome these problems
 
+## Bottom line up front
+LunaRoverV2 did address issues with torque and steering, but uncovered a swathe of other issues... most notably (in order of perceived importance): high latency control, drag (from weight and bad clearance), and spaghetti cables.
+
+As tempting as it is to just buy a really great looking tracked vehicle which can carry a 10kg payload (fro AliExpress), I've thought of some quick ways in which I think I can improve the LunaRover - which are: flip it upside down for more clearance (will remount electronics), replace control mechanism with a 2.4GHz transmitter and ESC.
+
 ## Introduction
 I have a dog named Luna. I sometimes feel bad when I leave Luna to entertain herself. I wanted a cool new project to work on. Considering all that, I present to you.... the LunaRover.
 
@@ -182,3 +187,10 @@ int main(int argc, char *argv[]) {
 
 
 ```
+
+## Conclusion
+It works as an RC car, but its clear there are some areas of improvement. Notably:
+* High latency in processing movement commands. I think this is due to a combination of the fact that I am a. using a RPi as a "middleman" to process received commands into PWM signals, b. using a 433 MHz tansmitter and receiver. To improve this I could use a 2.4GHz transmitter and receiver which sends signals directly to the speed controller (bypassing signals being sent to the RPi entirely and replacing the two enormous BTS7960 motor drivers with a single dual motor ESC).
+* Drivetrain weight. Its heavyand takes up a lot of space. In hindsight planetary gears would've been more ideal. The fact that the gear ratio is configurable isn't very useful as a. its tedious to change the ratio, and b. I never change the ratio.
+* Lawnmover wheels. They were free, and I love recycling, but they ice skate on my laminate wood flooring. Not a massive issue as intend on using the vehicle outside.
+* Clearance between underneath of the body and the floor is minimal. This is an issue as the drag through long grass is a problem. If I were to redesign I'd have an axle run under the body (as they do in cars).
